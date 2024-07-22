@@ -1,70 +1,36 @@
 import dotenv from 'dotenv';
-dotenv.config({ path: '../../configs/.env.test' });
-import { Express } from 'express';
-import connectDB from '../../api/db';
-import { createApp } from '../../api/app';
+dotenv.config({ path: '../../configs/.env' });
 import request from 'supertest';
-import User from '../../api/schemas/userSchema';
-import mongoose from 'mongoose';
+import { createApp } from '../../api/app';
+import { Express } from 'express';
 
 describe('/api/v1/users', () => {
-    let app: Express;
-    const userPayLoad = {
-        name: 'testName',
-        email: 'test@example.com',
-        password: '123456789',
-        confirmPassword: '123456789',
-        role: 'Admin',
-    };
+  let app: Express;
 
-    let currentJwt = 'Bearer ';
+  beforeAll(() => {
+    app = createApp();
+  });
 
-    beforeAll(async () => {
-        await connectDB();
-        app = createApp();
-
-        // Create Test user
-        await request(app).post('/api/v1/auth/signUp').send(userPayLoad);
-
-        // Sign in using Admin
-        const response2 = await request(app).post('/api/v1/auth/signIn').send({
-            email: userPayLoad.email,
-            password: userPayLoad.password,
-        });
-        currentJwt += response2.body.jwt;
+  describe('[GET] /', () => {
+    it('should return 200 and count is 8', async () => {
+      const response = await request(app).get('/api/v1/users'); // Assuming 123 is an invalid user ID
+      expect(response.status).toBe(200);
+      expect(response.body.count).toBe(8);
+    });
+  });
+  describe('[GET] /:id', () => {
+    it('should return 404 if user is not found', async () => {
+      const response = await request(app).get('/api/v1/users/10'); // Assuming 123 is an invalid user ID
+      expect(response.status).toBe(404);
+      expect(response.body.message).toBe(
+        'There is no user associated with this id.'
+      );
     });
 
-    afterAll(async () => {
-        await User.deleteMany();
-        await mongoose.connection.close();
+    it('should return 200 and get user id', async () => {
+      const response = await request(app).get('/api/v1/users/1'); // Assuming 123 is an invalid user ID
+      expect(response.status).toBe(200);
+      expect(response.body.data.id).toBe(1);
     });
-
-    describe('[PATCH] /updateMe', () => {
-        let name = 'updated Name';
-
-        const exec = async () => {
-            return await request(app)
-                .patch(`/api/v1/users/updateMe`)
-                .set('Authorization', currentJwt)
-                .send({
-                    name,
-                    notIncludedField: 'null',
-                });
-        };
-
-        it('Should return 200 with updated document', async () => {
-            const response = await exec();
-
-            expect(response.status).toBe(200);
-            expect(response.body.data.doc.name).toBe('updated Name');
-            expect(response.body.data.doc.notIncludedField).toBeUndefined();
-        });
-
-        it('Should return 401 when the user is not logged in', async () => {
-            currentJwt = '';
-            const response = await exec();
-
-            expect(response.status).toBe(401);
-        });
-    });
+  });
 });
