@@ -30,6 +30,8 @@ process.on('uncaughtException', (err) => {
 
 const PORT = process.env.PORT || (3001 as const);
 
+console.log('Hello');
+
 connectDB().then(() => {
     app.listen(PORT, () => {
         console.log(`Server is running on port: ${PORT}`);
