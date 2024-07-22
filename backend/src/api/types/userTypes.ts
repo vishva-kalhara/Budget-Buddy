@@ -1,32 +1,18 @@
-import mongoose from 'mongoose';
-
-export interface IUserInput {
-    name: String;
-    email: string;
-    password: string;
-    confirmPassword: string | undefined;
-    role: 'Admin' | 'User';
-    // role: string; //'Admin' | 'User'
-    isActive: boolean;
-}
-
-export interface IUserDocument extends IUserInput, mongoose.Document {
-    _id: string;
-    createdAt?: Date;
-    passwordResetAt?: Date;
-    passwordResetToken?: string;
-    passwordResetExpires?: Date;
-    isPasswordChanged: (iat: number) => Promise<boolean>;
-    createPasswordResetToken: () => string;
+export interface IUser {
+  id: number;
+  email: String;
+  password: String;
+  confirmPassword: String;
+  role: 'admin' | 'User';
 }
 
 export interface IGetAllUsersResponse {
-    status: String;
-    count: Number;
-    data: IUserInput[];
+  status: String;
+  count: Number;
+  data: IUser[];
 }
 
 export interface IGetUserResponse {
-    status: String;
-    data: IUserInput;
+  status: String;
+  data: IUser;
 }

@@ -1,41 +1,46 @@
-import { Request, Response } from 'express';
-import userSchema from '../schemas/userSchema';
+import { NextFunction, Request, Response } from 'express';
 import {
-    createOne,
-    deleteOne,
-    getAll,
-    getOne,
-    updateOne,
-} from '../utils/factoryFunctions';
+  IGetAllUsersResponse,
+  IGetUserResponse,
+  IUser,
+} from '../types/userTypes';
+// import { dummyUsers } from '../../__data__/dummy-users';
+import catchAsync from '../../utils/catchAsync';
+import AppError from '../../utils/appError';
+import { dummyUsers } from '../../__data__/dummy-users';
 
-export const getAllUsers = getAll(userSchema);
+export const getAllUsers = catchAsync(
+  async (
+    _req: Request,
+    res: Response<IGetAllUsersResponse>,
+    _next: NextFunction
+  ) => {
+    res.status(200).json({
+      status: 'success',
+      count: dummyUsers.length,
+      data: dummyUsers,
+    });
+  }
+);
 
-export const getUser = getOne(userSchema);
-
-// export const createUser = createOne(userSchema);
-export const createUser = (_req: Request, res: Response) => {
-    if (process.env.test === 'test') {
-        return createOne(userSchema, {
-            type: 'include',
-            fields: ['name', 'email', 'password', 'confirmPassword', 'role'],
-        });
+export const getUser = catchAsync(
+  async (
+    req: Request<{ id: number }>,
+    res: Response<IGetUserResponse>,
+    next: NextFunction
+  ) => {
+    const user = (await dummyUsers.find((el) => {
+      return el.id == req.params.id;
+    })) as IUser | undefined;
+    if (!user) {
+      return next(
+        new AppError(`There is no user associated with this id.`, 404)
+      );
     }
 
-    res.status(401).json({
-        status: 'Unauthorized',
-        message: 'Use /sign-up route',
+    res.status(200).json({
+      status: 'success',
+      data: user,
     });
-};
-
-export const updateUser = updateOne(userSchema, {
-    type: 'include',
-    fields: ['name', 'email', 'isActive', 'role'],
-});
-
-export const deleteUser = deleteOne(userSchema);
-
-export const updateMe = updateOne(userSchema, {
-    type: 'include',
-    docIdFrom: 'jwt',
-    fields: ['name', 'email'],
-});
+  }
+);

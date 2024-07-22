@@ -1,40 +1,15 @@
 import express from 'express';
-import path from 'path';
-import helmet from 'helmet';
-import morgan from 'morgan';
-
 import userRouter from './routes/userRoutes';
 import errorHandler from './middlewares/errorHandler';
-import authRouter from './routes/authRoutes';
-import cors from 'cors';
 
 export function createApp() {
-    const app = express();
+  const app = express();
 
-    // Cross Origin Resource Sharing
-    app.use(cors());
+  app.use(express.json({ limit: '10kb' }));
 
-    // Enabling PUT, PATCH, DELETE requests
-    app.options('*', cors());
+  app.use('/api/v1/users', userRouter);
 
-    // Setup view engine
-    app.set('view engine', 'pug');
-    app.set('views', path.join(__dirname, 'views'));
+  app.use(errorHandler);
 
-    // HTTP Headers
-    app.use(helmet());
-
-    // Development Logging
-    if (process.env.NODE_ENV === 'development') {
-        app.use(morgan('dev'));
-    }
-
-    app.use(express.json({ limit: '10kb' }));
-
-    app.use('/api/v1/auth', authRouter);
-    app.use('/api/v1/users', userRouter);
-
-    app.use(errorHandler);
-
-    return app;
+  return app;
 }
