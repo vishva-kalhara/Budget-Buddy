@@ -67,6 +67,14 @@ let incomeRecords: incomeType[] = [
   },
 ];
 
+/**
+ * Get all income records.
+ *
+ * @param {Request} _req - Express request object
+ * @param {Response} res - Express response object
+ * @param {NextFunction} _next - Express next middleware function
+ * @returns {Response} JSON response with all income records
+ */
 export const getAllIncomes = (
   _req: Request,
   res: Response,
@@ -79,6 +87,14 @@ export const getAllIncomes = (
   });
 };
 
+/**
+ * Get a single income record by ID.
+ *
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @param {NextFunction} next - Express next middleware function
+ * @returns {Promise<Response>} JSON response with the requested income record
+ */
 export const getOneIncome = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const records = incomeRecords.filter((item) => item.id === req.params.id);
@@ -92,6 +108,14 @@ export const getOneIncome = catchAsync(
   }
 );
 
+/**
+ * Create a new income record.
+ *
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @param {NextFunction} next - Express next middleware function
+ * @returns {Promise<Response>} JSON response with the created income record
+ */
 export const createIncome = catchAsync(
   async (
     { body: { title, description, amount } }: Request,
@@ -119,6 +143,14 @@ export const createIncome = catchAsync(
   }
 );
 
+/**
+ * Update an existing income record by ID.
+ *
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @param {NextFunction} next - Express next middleware function
+ * @returns {Promise<Response>} JSON response with the updated income record
+ */
 export const updateIncome = catchAsync(
   async (
     { body: { title, description, amount }, params: { id } }: Request,

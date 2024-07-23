@@ -1,7 +1,14 @@
 import dotenv from 'dotenv';
 import { createApp } from './app';
+// import cors from 'cors';
 
 const app = createApp();
+
+// Enabling PUT, PATCH, DELETE requests
+// const corsOptions = {
+//   origin: 'http://localhost:5173',
+// };
+// app.use(cors(corsOptions));
 
 process.on('uncaughtException', (err) => {
   console.log('Uncaught Exception! Server is shutting down...');

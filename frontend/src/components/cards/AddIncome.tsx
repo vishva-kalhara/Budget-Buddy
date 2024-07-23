@@ -1,38 +1,16 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { signUpSchema, TSignUpSchema } from "@/types/types";
-
+import { useCreateIncome } from "@/pages/CreateIncome.hooks";
 
 type AddIncomeProps = {
     cardHeader: string;
 };
 
-// Install both zod and react-hook-form
-// Create schema using zod
-// Validate the form using hook forms
-
-
 const AddIncome = ({ cardHeader }: AddIncomeProps) => {
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-        reset,
-    } = useForm<TSignUpSchema>({
-        resolver: zodResolver(signUpSchema),
-    });
-
-    const onSubmit = async () => {
-
-        //BackEnd Code 
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        reset();
-    };
+    const { onSubmit, register, handleSubmit, errors, isSubmitting } =
+        useCreateIncome();
 
     const navigate = useNavigate(); // Navigate to the expenses page
 
@@ -50,52 +28,56 @@ const AddIncome = ({ cardHeader }: AddIncomeProps) => {
                     <label className="text-primary font-semibold text-sm ">
                         Title
                     </label>
-                    <Input className="bg-bgSecondary"
-                        {...register("Title")}
-                    />
-                    {errors.Title && (
-                        <p className="text-red-600 font-semibold"> {`${errors.Title.message}`} </p>
+                    <Input className="bg-bgSecondary" {...register("title")} />
+                    {errors.title && (
+                        <p className="text-red-600 font-semibold">
+                            {" "}
+                            {`${errors.title.message}`}{" "}
+                        </p>
                     )}
-
                 </div>
                 <div className="w-full flex flex-col gap-1">
                     <label className="text-primary font-semibold text-sm ">
                         Description
                     </label>
-                    <Input className="bg-bgSecondary"
-                        {...register("Description")}
+                    <Input
+                        className="bg-bgSecondary"
+                        {...register("description")}
                     />
-                    {errors.Description && (
-                        <p className="text-red-600 font-semibold"> {`${errors.Description.message}`} </p>
+                    {errors.description && (
+                        <p className="text-red-600 font-semibold">
+                            {" "}
+                            {`${errors.description.message}`}{" "}
+                        </p>
                     )}
-
                 </div>
                 <div className="w-full flex flex-col gap-1">
                     <label className="text-primary font-semibold text-sm ">
                         Amount
                     </label>
-                    <Input className="bg-bgSecondary"
-                        {...register("Amount")}
-                    />
-                    {errors.Amount && (
-                        <p className="text-red-600 font-semibold"> {`${errors.Amount.message}`} </p>
+                    <Input className="bg-bgSecondary" {...register("amount")} />
+                    {errors.amount && (
+                        <p className="text-red-600 font-semibold">
+                            {" "}
+                            {`${errors.amount.message}`}{" "}
+                        </p>
                     )}
-
                 </div>
 
                 <Button
                     disabled={isSubmitting}
                     type="submit"
-                    className="w-full text-primary mt-4 bg-[#1c9b5f]">
+                    className="w-full text-primary mt-4 bg-[#1c9b5f]"
+                >
                     Add Income
                 </Button>
 
                 <Button
                     onClick={handleViewAllExpenses}
-                    className="w-full text-primary bg-[#456d5a]">
+                    className="w-full text-primary bg-[#456d5a]"
+                >
                     View All Expenses
                 </Button>
-
             </div>
         </form>
     );
