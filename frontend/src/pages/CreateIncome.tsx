@@ -5,7 +5,7 @@ const CreateIncome = () => {
     return (
         <section className="box-border p-5 flex bg-background h-screen flex-col">
             <Header />
-            <AddIncome cardHeader="Custom Header" />
+            <AddIncome cardHeader="Add Expense" />
         </section>
     );
 };
