@@ -16,4 +16,14 @@ incomeRouter
   .patch(updateIncome)
   .delete(deleteIncome);
 
+/*
+ *
+ * [GET] / --> Get All data
+ * [POST] / --> Create a new record
+ * [GET] /:id --> Get one record
+ * [PATCH] /:id --> update one record
+ * [DELETE] /:id --> delete one record
+ *
+ */
+
 export default incomeRouter;
