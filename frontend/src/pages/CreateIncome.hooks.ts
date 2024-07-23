@@ -34,6 +34,7 @@ export const useCreateIncome = () => {
             });
             console.log(response.data);
         } catch (error) {
+            console.log("Hello");
             console.log(error);
         }
     };
