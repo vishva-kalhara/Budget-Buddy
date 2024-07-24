@@ -28,9 +28,16 @@ const AddIncome = ({ cardHeader }: AddIncomeProps) => {
                     <label className="text-primary font-semibold text-sm ">
                         Title
                     </label>
-                    <Input className="bg-bgSecondary" {...register("title")} />
+                    <Input
+                        data-testid="txtBoxTitle"
+                        className="bg-bgSecondary"
+                        {...register("title")}
+                    />
                     {errors.title && (
-                        <p className="text-red-600 font-semibold">
+                        <p
+                            data-testid="lblErrorTitle"
+                            className="text-red-600 font-semibold"
+                        >
                             {" "}
                             {`${errors.title.message}`}{" "}
                         </p>
@@ -65,6 +72,7 @@ const AddIncome = ({ cardHeader }: AddIncomeProps) => {
                 </div>
 
                 <Button
+                    data-testid="btnSubmit"
                     disabled={isSubmitting}
                     type="submit"
                     className="w-full text-primary mt-4 bg-[#1c9b5f]"
